@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملخصات شبكات الحاسوب واتصالات البيانات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'Inter', 'sans-serif'],
+                        mono: ['Inter', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            scroll-behavior: smooth;
+        }
+        .ltr-badge {
+            direction: ltr;
+            display: inline-block;
+            font-family: 'Inter', sans-serif;
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] .chevron-icon {
+            transform: rotate(180deg);
+        }
+        .chevron-icon {
+            transition: transform 0.2s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-l from-brand-900 via-brand-700 to-blue-600 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+                <div class="flex items-center gap-2 text-xs font-semibold bg-white/15 w-fit px-3 py-1 rounded-full mb-1">
+                    <span>Computer Networks & Data Communications</span>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">
+                    ملخص شامل لمحاضرات شبكات الحاسوب وعنونة IPv4
+                </h1>
+            </div>
+            <div class="flex items-center gap-2">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث عن مصطلح، طبقة، بروتوكول، أو عنوان..."
+                    class="w-full md:w-72 px-4 py-2 rounded-xl text-slate-900 bg-white/95 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 shadow-sm"
+                    oninput="filterContent()"
+                >
+            </div>
+        </div>
+
+        <!-- Navigation Tabs / Quick Jump -->
+        <nav class="bg-brand-900/60 border-t border-white/10 overflow-x-auto">
+            <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 py-2 text-xs sm:text-sm whitespace-nowrap">
+                <a href="#lec1" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 1: الأساسيات</a>
+                <a href="#lec2" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 2: الهياكل والشبكات</a>
+                <a href="#lec2-5" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">مقدمة الإنترنت والتبديل</a>
+                <a href="#lec3" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 3: البروتوكولات والخدمات</a>
+                <a href="#lec4" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 4: نموذج OSI والفيزيائية</a>
+                <a href="#lec5" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 5: ربط البيانات والشبكة</a>
+                <a href="#lec6" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 6: الطبقات العليا وTCP/IP</a>
+                <a href="#lec7" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition">المحاضرة 7: مستويات العناوين</a>
+                <a href="#ipv4" class="px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-200 border border-amber-300/30 hover:bg-amber-400/30 transition font-bold">عنونة IPv4</a>
+                <a href="#qbank" class="px-3 py-1.5 rounded-lg bg-emerald-400/20 text-emerald-200 border border-emerald-300/30 hover:bg-emerald-400/30 transition font-bold">بنك الأسئلة وحلول القفزات</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto w-full px-4 py-8 space-y-6 flex-1" id="contentContainer">
+
+        <!-- Helper Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="text-sm text-slate-600">
+                تم تنظيم الملخص وفق التسلسل الدراسي للملفات المرفقة مع إبراز التعاريف، المقارنات، والقوانين المهمة للامتحانات.
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAnswers(true)" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition cursor-pointer">
+                    إظهار الحلول
+                </button>
+                <button onclick="toggleAnswers(false)" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-amber-500 text-slate-950 hover:bg-amber-400 transition cursor-pointer">
+                    إخفاء الحلول
+                </button>
+                <button onclick="toggleAll(true)" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-brand-600 text-white hover:bg-brand-700 transition cursor-pointer">
+                    فتح الكل
+                </button>
+                <button onclick="toggleAll(false)" class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">
+                    طي الكل
+                </button>
+            </div>
+        </div>
+
+        <div id="noResultsMsg" class="hidden text-center py-12 bg-white rounded-2xl border border-slate-200">
+            <p class="text-slate-600 font-semibold">لا توجد نتائج مطابقة لكلمة البحث.</p>
+        </div>
+
+        <!-- LECTURE 1 -->
+        <section id="lec1" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details open>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L1</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة الأولى: مقدمة في اتصالات البيانات والشبكات</h2>
+                            <p class="text-xs text-slate-500">Data Communications, Components, Representation, Data Flow & Criteria</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">1. مفهوم اتصالات البيانات (Data Communications) وخصائص فعاليتها</h3>
+                        <p>
+                            اتصالات البيانات هي تبادل البيانات (بشكل أصفار وآحاد) بين جهازين عبر وسط نقل مثل الكابل السلكي. وتعتمد فعالية النظام على <strong>ثلاث خصائص أساسية</strong>:
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1" dir="ltr">
+                            Data communications is the exchange of data (as 0s and 1s) between two devices via a transmission medium such as a wire cable. System effectiveness depends on three fundamental characteristics:
+                        </p>
+                        <ul class="list-disc pr-6 mt-2 space-y-2">
+                            <li>
+                                <div><strong>التسليم:</strong> وصول البيانات إلى الوجهة الصحيحة والمقصودة فقط.</div>
+                                <div class="text-xs text-slate-500 mt-0.5" dir="ltr"><strong>Delivery:</strong> Data must reach the intended and correct destination only.</div>
+                            </li>
+                            <li>
+                                <div><strong>الدقة:</strong> وصول البيانات دون تشويه أو تغيير، فالبيانات المتغيرة دون تصحيح تصبح غير قابلة للاستخدام.</div>
+                                <div class="text-xs text-slate-500 mt-0.5" dir="ltr"><strong>Accuracy:</strong> Data must arrive unaltered; altered data without correction is unusable.</div>
+                            </li>
+                            <li>
+                                <div><strong>الالتزام بالوقت:</strong> وصول البيانات في الوقت المناسب؛ إذ إن البيانات المتأخرة تكون عديمة الفائدة (مثل النقل الفوري للصوت والفيديو دون تأخير ملحوظ وبنفس ترتيب إنتاجها).</div>
+                                <div class="text-xs text-slate-500 mt-0.5" dir="ltr"><strong>Timeliness:</strong> Data must arrive on time; late data is useless (such as real-time audio/video with no significant delay and in production order).</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">2. المكونات الخمسة لنظام اتصالات البيانات</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                            <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100">
+                                <div class="font-bold text-brand-900">1. الرسالة</div>
+                                <p class="text-xs mt-1">المعلومة المراد نقلها (نص، أرقام، صوت، صورة، فيديو).</p>
+                                <p class="text-[11px] text-slate-500 mt-1" dir="ltr"><strong>Message:</strong> Information to be communicated (text, numbers, audio, image, video).</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100">
+                                <div class="font-bold text-brand-900">2. المرسل</div>
+                                <p class="text-xs mt-1">الجهاز المرسل للبيانات (حاسوب، محطة عمل، هاتف، كاميرا).</p>
+                                <p class="text-[11px] text-slate-500 mt-1" dir="ltr"><strong>Sender:</strong> Device that sends data (computer, workstation, telephone, camera).</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100">
+                                <div class="font-bold text-brand-900">3. المستقبل</div>
+                                <p class="text-xs mt-1">الجهاز المستلم للبيانات (حاسوب، هاتف، تلفاز).</p>
+                                <p class="text-[11px] text-slate-500 mt-1" dir="ltr"><strong>Receiver:</strong> Device that receives data (computer, telephone, television).</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100">
+                                <div class="font-bold text-brand-900">4. الوسط</div>
+                                <p class="text-xs mt-1">المسار الفيزيائي للرسالة (أسلاك مجدولة، محور، ألياف بصرية، ليزر، موجات راديوية).</p>
+                                <p class="text-[11px] text-slate-500 mt-1" dir="ltr"><strong>Medium:</strong> Physical path of the message (twisted pair, coaxial, fiber optic, laser, radio waves).</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100">
+                                <div class="font-bold text-brand-900">5. البروتوكول</div>
+                                <p class="text-xs mt-1">مجموعة قواعد تحكم الاتصال وتمثل اتفاقاً بين الأجهزة؛ بدونه لا يحدث تفاهم.</p>
+                                <p class="text-[11px] text-slate-500 mt-1" dir="ltr"><strong>Protocol:</strong> Set of rules governing data communication; an agreement between devices.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">3. تمثيل البيانات</h3>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>النصوص:</strong> تُمثل بنمط بتات (سلسلة من 0 و1)، مثل أنظمة تستخدم 32 بت للرمز الواحد.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Text:</strong> Represented as a bit pattern (sequence of 0s and 1s), e.g., 32-bit code per symbol.</div>
+                                </li>
+                                <li>
+                                    <div><strong>الأرقام:</strong> تُحوّل مباشرة إلى النظام الثنائي لتبسيط العمليات الحسابية.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Numbers:</strong> Converted directly to binary to simplify arithmetic operations.</div>
+                                </li>
+                                <li>
+                                    <div><strong>الصور:</strong> مصفوفة من النقاط يعتمد حجمها على الدقة ولكل نقطة نمط بتات.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Images:</strong> Matrix of pixels; size depends on resolution and each pixel has a bit pattern.</div>
+                                </li>
+                                <li>
+                                    <div><strong>الصوت:</strong> إشارة مستمرة وليست متقطعة.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Audio:</strong> Continuous signal, not discrete.</div>
+                                </li>
+                                <li>
+                                    <div><strong>الفيديو:</strong> قد يُنتج ككيان مستمر أو كسلسلة صور متتابعة لإيحاء الحركة.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Video:</strong> Continuous entity or combination of images producing motion.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">4. استخدامات الشبكات والمعالجة الموزعة</h3>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>أهمية الشبكات:</strong> مشاركة الموارد (كطابعة مشتركة)، نموذج العميل-الخادم، تقريب الناس، التجارة الإلكترونية، وشبكات الهاتف المحمول.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Network Uses:</strong> Resource sharing, Client-Server model, connecting people, E-Commerce, and cellular networks.</div>
+                                </li>
+                                <li>
+                                    <div><strong>المعالجة الموزعة:</strong> تقسيم المهمة على عدة حواسيب يتولى كل منها جزءاً بدلاً من حاسوب ضخم واحد.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Distributed Processing:</strong> Task is divided among multiple computers instead of one large system.</div>
+                                </li>
+                                <li>
+                                    <div><strong>معايير الشبكة:</strong> <strong>الأداء</strong> (يُقاس بالتأخير والإنتاجية)، <strong>الموثوقية</strong> (معدل الأعطال والجاهزية)، و<strong>الأمان</strong> (حماية البيانات من الأخطاء والمهاجمين).</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Network Criteria:</strong> Performance (delay &amp; throughput), Reliability (failure rate &amp; availability), and Security.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+                        <h3 class="font-bold text-amber-950 mb-2">5. أنماط تدفق البيانات</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                            <div>
+                                <div><strong>أحادي الاتجاه:</strong> جهاز يرسل فقط والآخر يستقبل فقط.</div>
+                                <div class="text-xs text-slate-500 mt-0.5" dir="ltr"><strong>Simplex:</strong> Unidirectional; one device sends and the other receives only.</div>
+                            </div>
+                            <div>
+                                <div><strong>نصف مزدوج:</strong> كلا الطرفين يرسل ويستقبل ولكن <strong>ليس في الوقت نفسه</strong>.</div>
+                                <div class="text-xs text-slate-500 mt-0.5" dir="ltr"><strong>Half-duplex:</strong> Both can transmit and receive, but not at the same time.</div>
+                            </div>
+                            <div>
+                                <div><strong>مزدوج بالكامل:</strong> كلا الطرفين يرسلان ويستقبلان <strong>في الوقت نفسه</strong>.</div>
+                                <div class="text-xs text-slate-500 mt-0.5" dir="ltr"><strong>Full-duplex:</strong> Both stations can transmit and receive simultaneously.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 2 -->
+        <section id="lec2" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details open>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L2</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة الثانية: تقنيات النقل، الهياكل، وتصنيف الشبكات</h2>
+                            <p class="text-xs text-slate-500">Transmission Technology, Topologies, LAN/MAN/WAN & Internet Hierarchy</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">1. تقنيات وتكوينات النقل</h3>
+                        <ul class="list-disc pr-6 space-y-2 text-sm">
+                            <li>
+                                <div><strong>نقطة إلى نقطة:</strong> رابط مخصص بالكامل بين جهازين فقط.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Point-to-Point:</strong> Dedicated link between two devices only.</div>
+                            </li>
+                            <li>
+                                <div><strong>متعدد النقاط / بث:</strong> قناة اتصال واحدة مشتركة بين عدة أجهزة؛ إما بمشاركة مكانية أو زمنية بتناوب الأدوار.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Multipoint / Broadcast:</strong> One channel shared by multiple devices (spatially shared or time shared).</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">2. هياكل الشبكات ومقارنة سريعة</h3>
+                        <p class="text-sm mb-1">الهيكل هو التمثيل الهندسي لعلاقة الروابط والأجهزة ببعضها (فيزيائياً أو منطقياً):</p>
+                        <p class="text-xs text-slate-500 mb-3" dir="ltr">Topology is the geometric representation of how links and devices are related to one another (physically or logically).</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs sm:text-sm border-collapse border border-slate-200 rounded-xl overflow-hidden">
+                                <thead class="bg-brand-900 text-white">
+                                    <tr>
+                                        <th class="p-3 text-right">الهيكل</th>
+                                        <th class="p-3 text-right">آلية الربط</th>
+                                        <th class="p-3 text-right">المميزات</th>
+                                        <th class="p-3 text-right">العيوب</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr class="bg-white">
+                                        <td class="p-3 font-bold">الشبكي <span class="ltr-badge">Mesh</span></td>
+                                        <td class="p-3">رابط مخصص لكل جهاز مع كل جهاز آخر<div class="text-[11px] text-slate-500" dir="ltr">Dedicated link to every other device</div></td>
+                                        <td class="p-3">قوي/متين، أمان عالٍ، يقلل الازدحام<div class="text-[11px] text-slate-500" dir="ltr">Robust, high security, less congestion</div></td>
+                                        <td class="p-3">صعب التركيب وإعادة التهيئة، مكلف، كثرة الكوابل<div class="text-[11px] text-slate-500" dir="ltr">Hard to install/reconfigure, expensive, many cables</div></td>
+                                    </tr>
+                                    <tr class="bg-slate-50/70">
+                                        <td class="p-3 font-bold">النجمي <span class="ltr-badge">Star</span></td>
+                                        <td class="p-3">كل جهاز متصل بوحدة مركزية (<span class="ltr-badge">Hub</span>)<div class="text-[11px] text-slate-500" dir="ltr">Each device connects to a central controller (Hub)</div></td>
+                                        <td class="p-3">أرخص وأسهل تركيباً، كوابل أقل، سهولة عزل الأعطال<div class="text-[11px] text-slate-500" dir="ltr">Cheaper, easy setup, less cabling, easy fault isolation</div></td>
+                                        <td class="p-3">تعطل الـ Hub يعطل الشبكة؛ لا مرور مباشر بين الأجهزة<div class="text-[11px] text-slate-500" dir="ltr">Hub failure downs network; no direct device traffic</div></td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="p-3 font-bold">الناقل <span class="ltr-badge">Bus</span></td>
+                                        <td class="p-3">كابل رئيسي واحد (<span class="ltr-badge">Backbone</span>) مع وصلات فرعية<div class="text-[11px] text-slate-500" dir="ltr">One long backbone cable with drop lines &amp; taps</div></td>
+                                        <td class="p-3">سهل التركيب، كوابل أقل<div class="text-[11px] text-slate-500" dir="ltr">Easy installation, less cabling</div></td>
+                                        <td class="p-3">ضعف الإشارة مع المسافة، صعوبة التعديل، انقطاع الكابل يوقفها<div class="text-[11px] text-slate-500" dir="ltr">Signal attenuation, hard to add/isolate, cable break stops all</div></td>
+                                    </tr>
+                                    <tr class="bg-slate-50/70">
+                                        <td class="p-3 font-bold">الحلقي <span class="ltr-badge">Ring</span></td>
+                                        <td class="p-3">كل جهاز متصل بالجهازين المجاورين في حلقة<div class="text-[11px] text-slate-500" dir="ltr">Each device links to next &amp; previous neighbors in a ring</div></td>
+                                        <td class="p-3">سهل التركيب وإعادة التهيئة، عزل الأعطال بمراقبة الإشارة<div class="text-[11px] text-slate-500" dir="ltr">Easy to install/reconfigure, fault isolation via signal alarm</div></td>
+                                        <td class="p-3">اتجاه واحد؛ انقطاع الحلقة المفردة يوقف الشبكة<div class="text-[11px] text-slate-500" dir="ltr">Unidirectional; single break can disable the ring</div></td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="p-3 font-bold">الهجين <span class="ltr-badge">Hybrid</span></td>
+                                        <td class="p-3">دمج أكثر من هيكل (مثل نجمة رئيسية مع خطوط Bus)<div class="text-[11px] text-slate-500" dir="ltr">Combines multiple topologies (e.g., main star + bus lines)</div></td>
+                                        <td class="p-3">يجمع مرونة ومزايا أكثر من هيكل<div class="text-[11px] text-slate-500" dir="ltr">Combines strengths &amp; flexibility of multiple topologies</div></td>
+                                        <td class="p-3">تزداد تعقيداً وتكلفة بحسب الأجزاء المدمجة<div class="text-[11px] text-slate-500" dir="ltr">More complex and costly depending on combined parts</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">3. تصنيف الشبكات حسب النطاق والهيكل الهرمي للإنترنت</h3>
+                        <ul class="list-disc pr-6 space-y-2 text-sm">
+                            <li>
+                                <div><strong>PAN:</strong> شبكة شخصية لمسافات قصيرة جداً (مثل ربط الماوس لاسلكياً بالحاسوب).</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>PAN (Personal Area Network):</strong> Very short-range network (e.g., wireless mouse to computer).</div>
+                            </li>
+                            <li>
+                                <div><strong>LAN:</strong> شبكة محلية خاصة داخل غرفة أو مبنى أو حرم جامعي، وتدعم الشبكات اللاسلكية WLAN.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>LAN (Local Area Network):</strong> Privately owned network within a room, building, or campus; supports WLAN.</div>
+                            </li>
+                            <li>
+                                <div><strong>MAN:</strong> شبكة مدنية تغطي مدينة أو بلدة (مثل خطوط DSL عالية السرعة أو شبكات الكابل التلفزيوني).</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>MAN (Metropolitan Area Network):</strong> Covers a city or town (e.g., high-speed DSL or cable TV network).</div>
+                            </li>
+                            <li>
+                                <div><strong>WAN:</strong> شبكة واسعة تغطي دولة أو قارة أو العالم، وتنقسم إلى مبدّلة (Switched WAN) ونقطة إلى نقطة (Point-to-point WAN).</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>WAN (Wide Area Network):</strong> Covers a country, continent, or world; includes Switched WAN and Point-to-point WAN.</div>
+                            </li>
+                            <li>
+                                <div><strong>ربط الشبكات والإنترنت:</strong> ربط شبكتين أو أكثر، وتُدار عبر مزودي الخدمة (ISPs) بتدرج هرمي يشمل الدولي، الوطني (عبر NAP)، الإقليمي، والمحلي.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Internetwork / Internet:</strong> Two or more networks interconnected via ISPs in a hierarchy (International, National via NAP, Regional, Local).</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 2.5 -->
+        <section id="lec2-5" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">1.x</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">مقدمة الإنترنت: الحافة، النواة، التبديل، والوسائط الفيزيائية</h2>
+                            <p class="text-xs text-slate-500">Network Edge, Access Nets, Physical Media, Packet vs Circuit Switching & Delays</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">1. نظرة عامة على الإنترنت ومعاييره</h3>
+                        <p>
+                            الإنترنت هو "شبكة الشبكات" تضم مليارات الأنظمة الطرفية التي تشغل التطبيقات، ومبدّلات الحزم (كالراوترات والسويتشات)، وروابط الاتصال. تُصاغ معايير الإنترنت عبر IETF ووثائق RFC.
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1" dir="ltr">
+                            The Internet is a "network of networks" connecting billions of end systems (hosts) running applications, packet switches (routers and switches), and communication links. Standards are developed by IETF via RFCs.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">2. شبكات الوصول والوسائط الفيزيائية</h3>
+                        <ul class="list-disc pr-6 space-y-2 text-sm">
+                            <li>
+                                <div><strong>الوصول عبر الكابل (HFC):</strong> نقل البيانات والتلفاز بترددات مختلفة عبر ألياف وكوابل محورية مشتركة؛ غير متماثل عبر CMTS.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Cable Access (HFC):</strong> Carries data and TV on different frequencies over shared fiber/coaxial cable; asymmetric via CMTS.</div>
+                            </li>
+                            <li>
+                                <div><strong>خط المشترك الرقمي (DSL):</strong> استخدام خط الهاتف القائم لتمرير البيانات إلى DSLAM والإنترنت والصوت إلى شبكة الهاتف بترددات مختلفة.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>DSL:</strong> Uses existing telephone line to send data to DSLAM/Internet and voice to phone network on different frequencies.</div>
+                            </li>
+                            <li>
+                                <div><strong>الشبكات اللاسلكية:</strong> WLAN / WiFi ضمن نطاق محدود (~100 قدم)، والشبكات الخلوية الواسعة 4G/5G لعشرات الكيلومترات.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Wireless Networks:</strong> WLAN/WiFi (~100 ft range) and wide-area cellular networks 4G/5G (tens of kilometers).</div>
+                            </li>
+                            <li>
+                                <div><strong>الوسائط الموجهة:</strong> Twisted Pair (مثل Cat5 وCat6)، Coaxial، وFiber optic (سرعات عالية جداً، معدل خطأ منخفض، ومقاومة للتداخل الكهرومغناطيسي).</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Guided Media:</strong> Twisted Pair (Cat5/Cat6), Coaxial, and Fiber optic (very high speed, low error rate, EMI immune).</div>
+                            </li>
+                            <li>
+                                <div><strong>الوسائط غير الموجهة:</strong> الموجات الراديوية (WiFi, Cellular, Bluetooth, Microwave, Satellite) وتتأثر بالانعكاس والعوائق والتداخل.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Unguided Media:</strong> Radio waves (WiFi, Cellular, Bluetooth, Microwave, Satellite), affected by reflection, obstructions, and interference.</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-100">
+                        <h3 class="font-bold text-brand-900 mb-2">3. تبديل الحزم مقابل تبديل الدارات</h3>
+                        <ul class="list-disc pr-6 space-y-2 text-sm">
+                            <li>
+                                <div><strong>التوجيه والترحيل:</strong> التوجيه إجراء عام يحدد المسار من المصدر للوجهة، بينما الترحيل إجراء محلي في الراوتر ينقل الحزمة من منفذ الدخل إلى منفذ الخرج حسب جدول الترحيل.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Routing vs. Forwarding:</strong> Routing determines end-to-end paths; forwarding moves a packet locally at a router from input to output port using a forwarding table.</div>
+                            </li>
+                            <li>
+                                <div><strong>التخزين والترحيل وتأخير الإرسال:</strong> وصول الحزمة كاملة للراوتر قبل إرسالها للرابط التالي؛ وقانون تأخير الإرسال هو: <span class="ltr-badge font-bold">Transmission Delay = L / R</span> حيث <span class="ltr-badge">L</span> طول الحزمة بالبت و<span class="ltr-badge">R</span> سرعة الرابط.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Store-and-Forward &amp; Transmission Delay:</strong> Entire packet must arrive at a router before transmission on next link; delay = L / R.</div>
+                            </li>
+                            <li>
+                                <div><strong>الاصطفاف والفقد:</strong> تصطف الحزم في الطابور إذا زاد معدل الوصول عن الإرسال، وقد تُفقد إذا امتلأت ذاكرة الراوتر.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Queueing &amp; Loss:</strong> Packets queue when arrival rate exceeds transmission rate, and may drop if buffer fills up.</div>
+                            </li>
+                            <li>
+                                <div><strong>تبديل الدارات:</strong> حجز موارد مخصصة للمكالمة طوال مدتها (FDM / TDM)، بينما تبديل الحزم يشارك الموارد بكفاءة للبيانات المتقطعة مع احتمال الازدحام.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Circuit vs. Packet Switching:</strong> Circuit switching reserves dedicated resources (FDM/TDM); packet switching shares resources dynamically for bursty data with possible congestion.</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 3 -->
+        <section id="lec3" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L3</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة الثالثة: البروتوكولات، المعايير، الطبقات، والخدمات</h2>
+                            <p class="text-xs text-slate-500">Syntax/Semantics/Timing, Standards Bodies, Layering, Encapsulation & Service Primitives</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">1. عناصر البروتوكول وهيئات المعايير</h3>
+                        <p>يُعرّف البروتوكول ثلاثة جوانب رئيسية:</p>
+                        <p class="text-xs text-slate-500 mb-2" dir="ltr">A protocol defines three key elements:</p>
+                        <ul class="list-disc pr-6 mt-1 space-y-2 text-sm">
+                            <li>
+                                <div><strong>البنية:</strong> شكل أو تنسيق البيانات وترتيبها.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Syntax:</strong> Structure or format of data and the order in which they are presented.</div>
+                            </li>
+                            <li>
+                                <div><strong>الدلالة:</strong> معنى كل جزء/مقطع من البتات وكيفية تفسيره.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Semantics:</strong> Meaning of each section of bits and how it is interpreted.</div>
+                            </li>
+                            <li>
+                                <div><strong>التوقيت:</strong> متى تُرسل البيانات وبأي سرعة.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Timing:</strong> When data should be sent and how fast they can be sent.</div>
+                            </li>
+                        </ul>
+                        <p class="mt-2 text-sm">
+                            <strong>منظمات المعايير:</strong> ISO, ITU-T, ANSI, IEEE, EIA؛ وتساعد المعايير على فتح الأسواق التنافسية وضمان التوافقية البينية.
+                        </p>
+                        <p class="text-xs text-slate-500" dir="ltr">
+                            <strong>Standards Organizations:</strong> ISO, ITU-T, ANSI, IEEE, EIA; standards create open competition and ensure interoperability.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">2. تراتبية البروتوكولات والتغليف</h3>
+                        <p class="text-sm">
+                            تقسيم الشبكة إلى طبقات يقلل التعقيد ويخفي التفاصيل الداخلية لكل طبقة عن الطبقات الأعلى عبر واجهات. عند الإرسال تنزل الرسالة وتُضاف الترويسات وقد تُجزأ وتُضاف لها ذيول في طبقة ربط البيانات، ثم تُزال في الطرف المستقبل أثناء الصعود.
+                        </p>
+                        <p class="text-xs text-slate-500 mt-1" dir="ltr">
+                            Layering reduces complexity and hides internal details from higher layers across interfaces. While going down, headers (and data-link trailers) are added; while going up, they are stripped.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">3. الخدمات والموثوقية</h3>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>مرتبط بالاتصال:</strong> يشبه الهاتف (إنشاء اتصال، نقل بيانات، إنهاء اتصال).</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Connection-oriented:</strong> Like telephone (setup connection, exchange data, release connection).</div>
+                                </li>
+                                <li>
+                                    <div><strong>غير مرتبط بالاتصال:</strong> يشبه البريد (كل رسالة تحمل العنوان الكامل وتُوجّه بشكل مستقل).</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Connectionless:</strong> Like postal mail (each message carries full address and is routed independently).</div>
+                                </li>
+                                <li>
+                                    <div><strong>الخدمة الموثوقة:</strong> تؤكد الاستلام وتمنع الفقد لكنها تضيف تأخيراً (مناسبة للملفات، بينما الصوت والفيديو المباشر يفضلان سرعة الاستجابة).</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Reliable Service:</strong> Acknowledges receipt and prevents loss with added delay (good for files; live audio/video prefers low delay).</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">4. العلاقة بين الخدمات والبروتوكولات</h3>
+                            <p class="text-sm">
+                                <strong>الخدمة</strong> هي مجموعة العمليات التي توفرها طبقة k للطبقة الأعلى k+1 عبر الواجهة دون توضيح التنفيذ، أما <strong>البروتوكول</strong> فهو قواعد تبادل الرسائل بين الكيانات النظيرة لتنفيذ تلك الخدمة، وهما منفصلان منطقياً.
+                            </p>
+                            <p class="text-xs text-slate-500 mt-1" dir="ltr">
+                                A <strong>service</strong> is a set of primitives/operations provided by layer k to layer k+1 across an interface; a <strong>protocol</strong> is the set of rules governing peer communication to implement that service. Services and protocols are decoupled.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 4 -->
+        <section id="lec4" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L4</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة الرابعة: نموذج OSI والطبقة الفيزيائية</h2>
+                            <p class="text-xs text-slate-500">7-Layer OSI Model, Encapsulation (Headers/Trailer) & Physical Layer Duties</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">1. نموذج الاتصال المفتوح (OSI Model)</h3>
+                        <p class="text-sm mb-1">
+                            نموذج مفاهيمي من 7 طبقات طوّرته ISO عام 1984 لتسهيل الاتصال بين الأنظمة المختلفة:
+                        </p>
+                        <p class="text-xs text-slate-500 mb-3" dir="ltr">
+                            A 7-layer conceptual model developed by ISO in 1984 to enable communication between diverse systems:
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs sm:text-sm">
+                            <div class="p-3 rounded-xl bg-slate-50 border"><strong>7. التطبيق:</strong> خدمات الشبكة للتطبيقات والمستخدم.<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Application: Network services for users/apps.</div></div>
+                            <div class="p-3 rounded-xl bg-slate-50 border"><strong>6. التقديم:</strong> تمثيل البيانات، التشفير، والضغط.<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Presentation: Translation, encryption, compression.</div></div>
+                            <div class="p-3 rounded-xl bg-slate-50 border"><strong>5. الجلسة:</strong> إدارة الحوار، التزامن، وإنهاء الجلسات.<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Session: Dialog control, synchronization, termination.</div></div>
+                            <div class="p-3 rounded-xl bg-slate-50 border"><strong>4. النقل:</strong> توصيل الرسائل من عملية لأخرى (Segments).<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Transport: Process-to-process message delivery (Segments).</div></div>
+                            <div class="p-3 rounded-xl bg-slate-50 border"><strong>3. الشبكة:</strong> عنونة الحزم واختيار أفضل مسار (Packets).<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Network: Packet addressing and routing (Packets).</div></div>
+                            <div class="p-3 rounded-xl bg-slate-50 border"><strong>2. ربط البيانات:</strong> الوصول للوسط ونقل الإطارات (Frames).<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Data Link: Medium access and hop-to-hop frames (Frames).</div></div>
+                            <div class="p-3 rounded-xl bg-slate-50 border sm:col-span-2"><strong>1. الفيزيائية:</strong> نقل البتات (Bits) عبر الوسط الفيزيائي والمواصفات الميكانيكية والكهربائية.<div class="text-[11px] text-slate-500 mt-0.5" dir="ltr">Physical: Transmits raw bits over physical medium; mechanical, electrical &amp; interface specs.</div></div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <h3 class="font-bold text-brand-900 mb-2">2. التغليف ومهام الطبقة الفيزيائية</h3>
+                        <p class="text-sm">
+                            في التغليف تُضاف الترويسات في الطبقات المختلفة، بينما يُضاف الذيل في <strong>الطبقة الثانية (Data Link)</strong> فقط. وتهتم الطبقة الفيزيائية بخصائص الوسط، تمثيل البتات بإشارات، معدل البيانات، تكوين الخط، الهيكل الفيزيائي، ووضع الإرسال.
+                        </p>
+                        <p class="text-xs text-slate-500 mt-1" dir="ltr">
+                            Encapsulation adds headers across layers, while a trailer is added at Layer 2 (Data Link). The Physical layer handles medium characteristics, signal representation, data rate, line configuration, topology, and transmission mode.
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 5 -->
+        <section id="lec5" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L5</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة الخامسة: طبقة ربط البيانات وطبقة الشبكة</h2>
+                            <p class="text-xs text-slate-500">Hop-to-Hop Delivery, LLC/MAC Sublayers & Source-to-Destination Delivery</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">1. طبقة ربط البيانات (Data Link Layer)</h3>
+                            <p class="text-sm mb-1">مسؤولة عن نقل <strong>الإطارات (Frames)</strong> من عقدة/قفزة إلى التالية.</p>
+                            <p class="text-xs text-slate-500 mb-2" dir="ltr">Responsible for moving frames from one node/hop to the next (hop-to-hop delivery).</p>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>المسؤوليات:</strong> التأطير، العنونة الفيزيائية، التحكم بالتدفق، التحكم بالأخطاء، والتحكم بالوصول للوسط.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Duties:</strong> Framing, physical addressing, flow control, error control, and access control.</div>
+                                </li>
+                                <li>
+                                    <div><strong>الطبقتان الفرعيتان:</strong> LLC (التحكم المنطقي بالرابط) وMAC (التحكم بالوصول للوسط ومعالجة التصادم والتأطير).</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Sublayers:</strong> LLC (Logical Link Control) and MAC (Media Access Control).</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">2. طبقة الشبكة (Network Layer)</h3>
+                            <p class="text-sm mb-1">مسؤولة عن تسليم <strong>الحزم (Packets)</strong> من المضيف المصدر إلى المضيف الوجهة.</p>
+                            <p class="text-xs text-slate-500 mb-2" dir="ltr">Responsible for delivering packets from the source host to the destination host (source-to-destination delivery).</p>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>العنونة:</strong> منح عناوين منطقية/شبكية تميز المصدر والوجهة عبر الشبكات.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Addressing:</strong> Logical addresses identify source and destination across networks.</div>
+                                </li>
+                                <li>
+                                    <div><strong>التوجيه:</strong> اختيار أفضل مسار للحزمة عبر استشارة جداول التوجيه وتعيين العنوان الفيزيائي للقفزة التالية.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Routing:</strong> Selects the best path using routing tables and resolves the next-hop physical address.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 6 -->
+        <section id="lec6" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L6</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة السادسة: الطبقات العليا ونموذج TCP/IP وبروتوكولاته</h2>
+                            <p class="text-xs text-slate-500">Transport, Session, Presentation, Application & TCP/IP Suite (IP, ARP, ICMP, TCP, UDP, SCTP)</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">1. وظائف الطبقات من النقل إلى التطبيق</h3>
+                        <ul class="list-disc pr-6 space-y-2 text-sm">
+                            <li>
+                                <div><strong>النقل:</strong> التوصيل من عملية لأخرى، عنونة المنفذ، التجزئة وإعادة التجميع، والتحكم بالاتصال والتدفق والأخطاء.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Transport:</strong> Process-to-process delivery, port addressing, segmentation/reassembly, connection/flow/error control.</div>
+                            </li>
+                            <li>
+                                <div><strong>الجلسة:</strong> التحكم بالحوار، نقاط التزامن، والإغلاق السليم.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Session:</strong> Dialog control, synchronization points, and graceful close.</div>
+                            </li>
+                            <li>
+                                <div><strong>التقديم:</strong> الترجمة/التحويل، التشفير، والضغط.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Presentation:</strong> Translation, encryption, and compression.</div>
+                            </li>
+                            <li>
+                                <div><strong>التطبيق:</strong> واجهة وصول المستخدم وخدمات الشبكة مثل HTTP, FTP, SMTP, DNS, Telnet, SNMP.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Application:</strong> User interface and network services such as HTTP, FTP, SMTP, DNS, Telnet, SNMP.</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <h3 class="font-bold text-brand-900 mb-2">2. مجموعة بروتوكولات TCP/IP وأهم البروتوكولات</h3>
+                        <p class="text-sm mb-1">
+                            يتكون نموذج TCP/IP الأصلي من 4 طبقات (Host-to-Network, Internet, Transport, Application)، حيث تقابل طبقة التطبيق فيه طبقات 5 و6 و7 في OSI.
+                        </p>
+                        <p class="text-xs text-slate-500 mb-2" dir="ltr">
+                            The original TCP/IP model has 4 layers (Host-to-Network, Internet, Transport, Application), where the Application layer corresponds to OSI layers 5, 6, and 7.
+                        </p>
+                        <ul class="list-disc pr-6 space-y-2 text-sm">
+                            <li>
+                                <div><strong>طبقة الإنترنت:</strong> IP بروتوكول غير موثوق وغير متصل ينقل Datagrams؛ ويدعمه ARP (ربط المنطقي بالفيزيائي)، RARP (اكتشاف المنطقي من الفيزيائي)، ICMP (إشعارات الأخطاء)، وIGMP (البث الجماعي).</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Internet Layer:</strong> IP is an unreliable, connectionless best-effort protocol carrying datagrams, supported by ARP, RARP, ICMP, and IGMP.</div>
+                            </li>
+                            <li>
+                                <div><strong>طبقة النقل:</strong> TCP موثوق ومرتبط بالاتصال؛ UDP غير موثوق وغير متصل وسريع للصوت والفيديو المباشر؛ وSCTP لتطبيقات حديثة كالصوت عبر الإنترنت.</div>
+                                <div class="text-xs text-slate-500" dir="ltr"><strong>Transport Layer:</strong> TCP is reliable and connection-oriented; UDP is unreliable, connectionless, and fast for live media; SCTP supports modern apps like VoIP.</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- LECTURE 7 -->
+        <section id="lec7" class="lecture-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <details>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-slate-50/70 hover:bg-slate-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-600 text-white font-bold flex items-center justify-center text-sm">L7</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">المحاضرة السابعة: مستويات العناوين الأربعة في TCP/IP</h2>
+                            <p class="text-xs text-slate-500">Physical (MAC), Logical (IP), Port & Application-Specific Addresses + Unicast/Multicast/Broadcast</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-slate-500 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-4 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <p class="text-sm">تُستخدم <strong>أربعة مستويات من العناوين</strong> في شبكات TCP/IP، وتتغير العناوين الفيزيائية عند عبور كل راوتر بينما تبقى العناوين المنطقية والمنافذ من المصدر للوجهة:</p>
+                    <p class="text-xs text-slate-500" dir="ltr">Four levels of addresses are used in TCP/IP: physical addresses change across each router hop, while logical and port addresses remain end-to-end.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm border-collapse border border-slate-200 rounded-xl overflow-hidden">
+                            <thead class="bg-brand-900 text-white">
+                                <tr>
+                                    <th class="p-3 text-right">نوع العنوان</th>
+                                    <th class="p-3 text-right">الطبقة</th>
+                                    <th class="p-3 text-right">وحدة البيانات</th>
+                                    <th class="p-3 text-right">الخصائص والأمثلة</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr class="bg-white">
+                                    <td class="p-3 font-bold">الفيزيائي <span class="ltr-badge">Physical / MAC</span></td>
+                                    <td class="p-3">ربط البيانات <span class="ltr-badge">Data Link</span></td>
+                                    <td class="p-3"><span class="ltr-badge">Frame</span></td>
+                                    <td class="p-3">عنوان العقدة في LAN/WAN؛ في الإيثرنت 6 بايت (48 بت) بـ 12 رقماً ست عشرياً.<div class="text-[11px] text-slate-500" dir="ltr">Node address on LAN/WAN; 6 bytes (48 bits) in Ethernet as 12 hex digits.</div></td>
+                                </tr>
+                                <tr class="bg-slate-50/70">
+                                    <td class="p-3 font-bold">المنطقي <span class="ltr-badge">Logical / IP</span></td>
+                                    <td class="p-3">الشبكة <span class="ltr-badge">Network</span></td>
+                                    <td class="p-3"><span class="ltr-badge">Datagram</span></td>
+                                    <td class="p-3">عنوان عالمي مستقل عن الشبكة الفيزيائية؛ في IPv4 طوله 32 بت.<div class="text-[11px] text-slate-500" dir="ltr">Universal network-layer address independent of physical network; 32 bits in IPv4.</div></td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="p-3 font-bold">المنفذ <span class="ltr-badge">Port</span></td>
+                                    <td class="p-3">النقل <span class="ltr-badge">Transport</span></td>
+                                    <td class="p-3"><span class="ltr-badge">Segment</span></td>
+                                    <td class="p-3">رقم من 16 بت يميز العملية/التطبيق على الجهاز (مثل FTP=21، Telnet=23، HTTP=80).<div class="text-[11px] text-slate-500" dir="ltr">16-bit number identifying a process on a host (e.g., FTP=21, Telnet=23, HTTP=80).</div></td>
+                                </tr>
+                                <tr class="bg-slate-50/70">
+                                    <td class="p-3 font-bold">الخاص بالتطبيق <span class="ltr-badge">Specific</span></td>
+                                    <td class="p-3">التطبيق <span class="ltr-badge">Application</span></td>
+                                    <td class="p-3"><span class="ltr-badge">Message</span></td>
+                                    <td class="p-3">عناوين سهلة الاستخدام للمستخدم مثل البريد الإلكتروني وعناوين URL.<div class="text-[11px] text-slate-500" dir="ltr">User-friendly application addresses such as email addresses and URLs.</div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-sm">
+                        <strong>أنماط الإرسال/العنونة:</strong> أحادي (Unicast: مرسل واحد إلى مستقبل واحد)، متعدد (Multicast: مرسل واحد إلى مجموعة)، وبث عام (Broadcast: مرسل واحد إلى جميع الأجهزة).
+                    </p>
+                    <p class="text-xs text-slate-500" dir="ltr">
+                        <strong>Communication Modes:</strong> Unicast (one-to-one), Multicast (one-to-many in a group), and Broadcast (one-to-all).
+                    </p>
+                </div>
+            </details>
+        </section>
+
+        <!-- IPV4 ADDRESSING -->
+        <section id="ipv4" class="lecture-card bg-white rounded-2xl border-2 border-brand-200 shadow-sm overflow-hidden">
+            <details open>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-brand-50/70 hover:bg-brand-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-brand-700 text-white font-bold flex items-center justify-center text-xs">IPv4</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-brand-900">عنونة IP Version 4: البنية، الفئات، وقناع الشبكة</h2>
+                            <p class="text-xs text-slate-600">32-Bit Structure, Binary/Decimal Conversion, Classes A–E, Special & Private IPs, Subnet Mask & ANDing</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-brand-700 text-lg">▼</span>
+                </summary>
+                <div class="p-5 space-y-5 text-sm sm:text-base leading-relaxed text-slate-700">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">1. بنية عنوان IPv4 والتحويل الثنائي/العشري</h3>
+                            <p class="text-sm">
+                                طوله <strong>32 بت</strong> مقسمة إلى 4 مجموعات من 8 بتات تُسمى Octets، وتُكتب بالنظام العشري المنقّط حيث يتراوح كل مقطع من 0 إلى 255 (المجموع الكلي 2³² = 4,294,967,296 عنوان).
+                            </p>
+                            <p class="text-xs text-slate-500 mt-1" dir="ltr">
+                                IPv4 is a 32-bit address divided into four 8-bit octets, written in dotted-decimal notation (0 to 255 per octet; 2³² = 4,294,967,296 total addresses).
+                            </p>
+                            <p class="text-sm mt-2">
+                                <strong>أوزان البتات الـ 8 (من اليسار لليمين):</strong> <span class="ltr-badge font-bold">128 - 64 - 32 - 16 - 8 - 4 - 2 - 1</span>. عند التحويل من عشري إلى ثنائي نطرح الأوزان المناسبة ونضع 1، وعند التحويل من ثنائي إلى عشري نجمع الأوزان المقابلة للبتات التي قيمتها 1.
+                            </p>
+                            <p class="text-xs text-slate-500 mt-1" dir="ltr">
+                                8-bit weights (left to right): 128-64-32-16-8-4-2-1. Decimal-to-binary subtracts matching weights (set 1); binary-to-decimal sums weights of 1-bits.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <h3 class="font-bold text-brand-900 mb-2">2. الفروقات بين MAC وIP وإدارة العناوين</h3>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>MAC (الطبقة 2):</strong> 48 بت ست عشري (24 بت OUI للشركة المصنعة + 24 بت للمعرف)، مسطح، ثابت عند التنقل، للتوصيل داخل الشبكة المحلية.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>MAC (Layer 2):</strong> 48-bit hex (24-bit OUI + 24-bit serial), flat, stays fixed across moves, used for local link delivery.</div>
+                                </li>
+                                <li>
+                                    <div><strong>IP (الطبقة 3):</strong> 32 بت عشري منقّط، هرمي (Network + Host)، يتغير بتغير الشبكة، للتوجيه بين الشبكات.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>IP (Layer 3):</strong> 32-bit dotted decimal, hierarchical (Network + Host), changes per network, used for routing across networks.</div>
+                                </li>
+                                <li>
+                                    <div><strong>الإدارة:</strong> تشرف ICANN وIANA وتوزع الكتل على السجلات الإقليمية (RIRs).</div>
+                                    <div class="text-xs text-slate-500" dir="ltr"><strong>Management:</strong> Coordinated by ICANN and IANA, and allocated via Regional Internet Registries (RIRs).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-bold text-brand-900 mb-2">3. فئات عناوين IPv4 (A, B, C, D, E) وحساب المضيفين</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs sm:text-sm border-collapse border border-slate-200 rounded-xl overflow-hidden">
+                                <thead class="bg-brand-900 text-white">
+                                    <tr>
+                                        <th class="p-3 text-right">الفئة</th>
+                                        <th class="p-3 text-right">البتات الأولى</th>
+                                        <th class="p-3 text-right">نطاق المقطع الأول</th>
+                                        <th class="p-3 text-right">القناع الافتراضي</th>
+                                        <th class="p-3 text-right">الاستخدام والمضيفون</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr class="bg-white">
+                                        <td class="p-3 font-bold">Class A</td>
+                                        <td class="p-3"><span class="ltr-badge">0</span></td>
+                                        <td class="p-3"><span class="ltr-badge">1 – 126</span></td>
+                                        <td class="p-3"><span class="ltr-badge">255.0.0.0 (/8)</span></td>
+                                        <td class="p-3">شبكات ضخمة (<span class="ltr-badge">2²⁴ - 2 = 16,777,214</span> مضيف)<div class="text-[11px] text-slate-500" dir="ltr">Large networks (2²⁴ - 2 = 16,777,214 hosts)</div></td>
+                                    </tr>
+                                    <tr class="bg-slate-50/70">
+                                        <td class="p-3 font-bold">Class B</td>
+                                        <td class="p-3"><span class="ltr-badge">10</span></td>
+                                        <td class="p-3"><span class="ltr-badge">128 – 191</span></td>
+                                        <td class="p-3"><span class="ltr-badge">255.255.0.0 (/16)</span></td>
+                                        <td class="p-3">شبكات متوسطة/كبيرة (<span class="ltr-badge">2¹⁶ - 2 = 65,534</span> مضيف)<div class="text-[11px] text-slate-500" dir="ltr">Medium/large networks (2¹⁶ - 2 = 65,534 hosts)</div></td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="p-3 font-bold">Class C</td>
+                                        <td class="p-3"><span class="ltr-badge">110</span></td>
+                                        <td class="p-3"><span class="ltr-badge">192 – 223</span></td>
+                                        <td class="p-3"><span class="ltr-badge">255.255.255.0 (/24)</span></td>
+                                        <td class="p-3">شبكات صغيرة (<span class="ltr-badge">2⁸ - 2 = 254</span> مضيف)<div class="text-[11px] text-slate-500" dir="ltr">Small networks (2⁸ - 2 = 254 hosts)</div></td>
+                                    </tr>
+                                    <tr class="bg-slate-50/70">
+                                        <td class="p-3 font-bold">Class D</td>
+                                        <td class="p-3"><span class="ltr-badge">1110</span></td>
+                                        <td class="p-3"><span class="ltr-badge">224 – 239</span></td>
+                                        <td class="p-3">لا يوجد</td>
+                                        <td class="p-3">بث متعدد Multicast<div class="text-[11px] text-slate-500" dir="ltr">Multicast group addressing</div></td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="p-3 font-bold">Class E</td>
+                                        <td class="p-3"><span class="ltr-badge">1111</span></td>
+                                        <td class="p-3"><span class="ltr-badge">240 – 255</span></td>
+                                        <td class="p-3">لا يوجد</td>
+                                        <td class="p-3">تجريبي وبحثي Experimental<div class="text-[11px] text-slate-500" dir="ltr">Experimental / research use</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs sm:text-sm mt-2">
+                            <strong>قاعدة عدد المضيفين الصالحين:</strong> <span class="ltr-badge font-bold">2ⁿ - 2</span> حيث <span class="ltr-badge">n</span> عدد بتات المضيف؛ ونطرح 2 لأن العنوان الأول (كل بتات المضيف أصفار) يمثل <strong>عنوان الشبكة</strong>، والأخير (كل بتات المضيف وحدات) يمثل <strong>عنوان البث (Broadcast)</strong>.
+                        </p>
+                        <p class="text-xs text-slate-500 mt-0.5" dir="ltr">
+                            Usable hosts formula: 2ⁿ - 2 (where n = host bits), subtracting 2 for the Network address (all host bits 0) and Broadcast address (all host bits 1).
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+                            <h3 class="font-bold text-amber-950 mb-2">4. العناوين الخاصة والخاصة بالشبكات الداخلية</h3>
+                            <ul class="list-disc pr-5 space-y-2 text-sm">
+                                <li>
+                                    <div><strong>عناوين خاصة (Private IPs):</strong> <span class="ltr-badge">10.0.0.0–10.255.255.255</span>، <span class="ltr-badge">172.16.0.0–172.31.255.255</span>، و<span class="ltr-badge">192.168.0.0–192.168.255.255</span>؛ غير قابلة للتوجيه مباشرة على الإنترنت وتحتاج NAT.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr">Private ranges are not directly routable on the public Internet and require NAT.</div>
+                                </li>
+                                <li>
+                                    <div><span class="ltr-badge font-semibold">0.0.0.0</span>: هذا المضيف / المسار الافتراضي.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr">This host / default route.</div>
+                                </li>
+                                <li>
+                                    <div><span class="ltr-badge font-semibold">127.x.x.x (127.0.0.1)</span>: فحص الحلقة المحلية (Loopback) للجهاز نفسه.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr">Loopback address for testing the local host stack.</div>
+                                </li>
+                                <li>
+                                    <div><span class="ltr-badge font-semibold">169.254.x.x</span>: APIPA عند عدم استجابة خادم DHCP.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr">APIPA link-local address when DHCP server is unreachable.</div>
+                                </li>
+                                <li>
+                                    <div><span class="ltr-badge font-semibold">255.255.255.255</span>: بث محدود ضمن الشبكة المحلية ولا يمرره الراوتر.</div>
+                                    <div class="text-xs text-slate-500" dir="ltr">Limited broadcast within the local network; not forwarded by routers.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-100">
+                            <h3 class="font-bold text-brand-900 mb-2">5. قناع الشبكة الفرعية (Subnet Mask) وعملية AND</h3>
+                            <p class="text-sm">
+                                في القناع، تمثل الوحدات (1) جزء الشبكة وتأتي متصلة من اليسار، والأصفار (0) تمثل جزء المضيف.
+                            </p>
+                            <p class="text-xs text-slate-500 mt-0.5" dir="ltr">
+                                In a subnet mask, contiguous 1s from the left represent the network portion and 0s represent the host portion.
+                            </p>
+                            <p class="text-sm mt-2">
+                                لإيجاد <strong>عنوان الشبكة</strong> ننفذ عملية <span class="ltr-badge font-semibold">AND</span> بتاً ببت بين عنوان IP والقناع (<span class="ltr-badge">1 AND 1 = 1</span>، وغير ذلك <span class="ltr-badge">0</span>).
+                            </p>
+                            <p class="text-xs text-slate-500 mt-0.5" dir="ltr">
+                                Bitwise AND between IP and subnet mask yields the Network address (1 AND 1 = 1; otherwise 0).
+                            </p>
+                            <p class="text-xs sm:text-sm mt-2 bg-white p-2.5 rounded-lg border border-blue-200">
+                                <strong>مثال:</strong> <span class="ltr-badge">192.168.10.77</span> مع القناع <span class="ltr-badge">255.255.255.0</span> ← الشبكة: <span class="ltr-badge font-bold">192.168.10.0</span>، المضيفون: <span class="ltr-badge">.1 – .254</span>، والبث: <span class="ltr-badge">.255</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <!-- QUESTION BANK & HOPS -->
+        <section id="qbank" class="lecture-card bg-white rounded-2xl border-2 border-emerald-200 shadow-sm overflow-hidden">
+            <details open>
+                <summary class="p-5 flex items-center justify-between cursor-pointer bg-emerald-50/70 hover:bg-emerald-100/70 transition select-none">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-emerald-700 text-white font-bold flex items-center justify-center text-xs">Q&A</span>
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-emerald-950">بنك الأسئلة الشامل وحلول مخططات القفزات</h2>
+                            <p class="text-xs text-slate-600">50 MCQs, 50 Fill-in-the-Blanks, Connection-oriented / Connectionless / Unordered & Hop-to-Hop Solutions</p>
+                        </div>
+                    </div>
+                    <span class="chevron-icon text-emerald-800 text-lg">▼</span>
+                </summary>
+
+                <div class="p-5 space-y-8 text-sm sm:text-base leading-relaxed text-slate-700">
+
+                    <!-- Special Topic: Connection-oriented, Connectionless & Unordered -->
+                    <div class="p-4 rounded-2xl bg-blue-50/60 border border-blue-200 space-y-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-brand-900">أولاً: أسئلة حول الاتصال المرتبط (Connection-oriented)، غير المرتبط (Connectionless)، وغير المرتب (Unordered) وسيناريوهات الامتحان</h3>
+                            <p class="text-xs text-slate-500 mt-0.5" dir="ltr">Questions on Connection-oriented, Connectionless, Unordered services &amp; Exam Scenarios</p>
+                        </div>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3.5 rounded-xl bg-white border border-slate-200">
+                                <div class="font-bold text-slate-900">س1: ما الفرق الجوهري بين خدمة Connection-oriented وخدمة Connectionless؟</div>
+                                <div class="text-xs text-slate-500 mb-1" dir="ltr">Q1: What is the core difference between Connection-oriented and Connectionless service?</div>
+                                <p class="answer-box text-emerald-800 font-semibold">
+                                    جواب: في Connection-oriented يُنشأ اتصال منطقي أولاً ثم تُنقل البيانات ثم يُنهى الاتصال (مثل المكالمة الهاتفية)، بينما في Connectionless تُرسل كل حزمة بشكل مستقل دون إنشاء اتصال مسبق وتحمل العنوان الكامل (مثل البريد).
+                                    <span class="block text-xs text-emerald-700 font-normal mt-0.5" dir="ltr">Ans: Connection-oriented sets up a connection before data transfer and releases it after (like a phone call), whereas connectionless sends each packet independently with full addressing without prior setup (like postal mail).</span>
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-white border border-slate-200">
+                                <div class="font-bold text-slate-900">س2: ماذا تعني حالة Unordered (وصول الحزم بغير ترتيب أو بدون ضمان ترتيب) في الشبكات؟</div>
+                                <div class="text-xs text-slate-500 mb-1" dir="ltr">Q2: What does Unordered mean in networking?</div>
+                                <p class="answer-box text-emerald-800 font-semibold">
+                                    جواب: تعني أن الحزم أو الرسائل قد تسلك مسارات مختلفة أو تتأخر متفاوتاً فتصل إلى المستقبل بترتيب مختلف عن ترتيب إرسالها، وتحتاج طبقة أعلى (مثل TCP) لإعادة ترتيبها إذا كان الترتيب ضرورياً.
+                                    <span class="block text-xs text-emerald-700 font-normal mt-0.5" dir="ltr">Ans: It means packets/messages may take different paths or experience varying delays and arrive out of their original sending order, requiring an upper layer (like TCP) to reorder them when order matters.</span>
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-white border border-slate-200">
+                                <div class="font-bold text-slate-900">س3: هل يمكن أن تكون الخدمة Connectionless وUnordered في الوقت نفسه؟ أعطِ مثالاً.</div>
+                                <div class="text-xs text-slate-500 mb-1" dir="ltr">Q3: Can a service be both Connectionless and Unordered? Give an example.</div>
+                                <p class="answer-box text-emerald-800 font-semibold">
+                                    جواب: نعم، مثل بروتوكول IP وUDP؛ فكل مخطط بيانات يُرسل بشكل مستقل دون اتصال مسبق وقد يصل متأخراً أو بغير ترتيب أو يُفقد.
+                                    <span class="block text-xs text-emerald-700 font-normal mt-0.5" dir="ltr">Ans: Yes, such as IP and UDP; each datagram is sent independently with no prior connection and may arrive late, out of order, or lost.</span>
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-white border border-slate-200">
+                                <div class="font-bold text-slate-900">س4: متى يُفضل استخدام خدمة غير مرتبطة بالاتصال أو غير مرتبة/سريعة بدلاً من الخدمة المرتبطة بالاتصال والموثوقة؟</div>
+                                <div class="text-xs text-slate-500 mb-1" dir="ltr">Q4: When is connectionless or unordered/fast delivery preferred over connection-oriented reliable delivery?</div>
+                                <p class="answer-box text-emerald-800 font-semibold">
+                                    جواب: يُفضل ذلك في تطبيقات الصوت والفيديو المباشر والألعاب الفورية حيث يكون الالتزام بالوقت وسرعة الوصول أهم من إعادة إرسال حزمة متأخرة أو مرتبة.
+                                    <span class="block text-xs text-emerald-700 font-normal mt-0.5" dir="ltr">Ans: In real-time audio/video and live streaming/gaming where timeliness and low delay matter more than retransmitting or strict ordering.</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- 30 Interactive Scenarios: Connection-oriented vs Connectionless -->
+                        <div class="pt-2 space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div>
+                                    <h4 class="font-bold text-brand-900 text-base">30 سيناريو تدريبي تفاعلي: Connection-oriented أم Connectionless؟</h4>
+                                    <p class="text-xs text-slate-500" dir="ltr">30 Interactive Scenarios: Connection-oriented vs. Connectionless (with Reliability)</p>
+                                </div>
+                                <div id="scenarioScoreBadge" class="px-3 py-1.5 rounded-xl bg-white text-brand-900 border border-brand-200 text-xs sm:text-sm font-bold">
+                                    نتيجة السيناريوهات: 0 / 30
+                                </div>
+                            </div>
+                            <div id="scenariosContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
+                        </div>
+                    </div>
+
+                    <!-- Hop-to-Hop Diagrams & Solutions -->
+                    <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-amber-950">ثانياً: حلول مخططات القفزات ومحتويات الطبقات (Hop-to-Hop Layer Contents)</h3>
+                            <p class="text-xs text-slate-500 mt-0.5" dir="ltr">Solutions for Hop-to-Hop Addressing &amp; Transport/Network/Data-Link Layer Contents (Broken vs. Unbroken Links)</p>
+                        </div>
+
+                        <div class="space-y-4 text-sm">
+                            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-2">
+                                <div class="font-bold text-brand-900">مخطط القفزات 1: إرسال حزمة من المضيف A إلى المضيف B عبر راوتر R1</div>
+                                <div class="text-xs text-slate-500" dir="ltr">Diagram 1: Sending a packet from Host A to Host B via Router R1</div>
+                                <div class="p-2.5 rounded-lg bg-slate-100 text-xs font-mono text-slate-800" dir="ltr">
+                                    [Host A: IP 192.168.1.10, MAC AA:AA] ===(Hop 1)==&gt; [Router R1: Left MAC 11:11 | Right MAC 22:22] ===(Hop 2)==&gt; [Host B: IP 10.0.0.5, MAC BB:BB]
+                                </div>
+                                <div class="answer-box text-emerald-800 font-semibold space-y-1">
+                                    <div>• <strong>القفزة الأولى (من A إلى R1):</strong> عنوان IP المصدر يبقى <span class="ltr-badge">192.168.1.10</span> وعنوان IP الوجهة يبقى <span class="ltr-badge">10.0.0.5</span>؛ بينما MAC المصدر <span class="ltr-badge">AA:AA</span> وMAC الوجهة <span class="ltr-badge">11:11</span>.</div>
+                                    <div>• <strong>القفزة الثانية (من R1 إلى B):</strong> عنوانا IP المصدر والوجهة يبقيان دون تغيير (<span class="ltr-badge">192.168.1.10</span> → <span class="ltr-badge">10.0.0.5</span>)، بينما يتغير MAC ليصبح المصدر <span class="ltr-badge">22:22</span> والوجهة <span class="ltr-badge">BB:BB</span>.</div>
+                                    <div class="text-xs text-emerald-700 font-normal" dir="ltr">
+                                        Hop 1 (A → R1): Src IP = 192.168.1.10, Dst IP = 10.0.0.5; Src MAC = AA:AA, Dst MAC = 11:11. Hop 2 (R1 → B): Src/Dst IPs stay unchanged; Src MAC = 22:22, Dst MAC = BB:BB.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-2">
+                                <div class="font-bold text-brand-900">مخطط القفزات 2 (نمط الامتحان): اتصال بين عملية في Laptop 0 (منفذ i) وعملية في Laptop 1 (منفذ J) عبر الراوترات</div>
+                                <div class="text-xs text-slate-500" dir="ltr">Diagram 2 (Exam Style): Communication from process at Laptop 0 (port i) to Laptop 1 (port J) across routers</div>
+                                <div class="p-2.5 rounded-lg bg-slate-100 text-xs font-mono text-slate-800" dir="ltr">
+                                    Laptop 0 (port i, IP_A, MAC_L0) -- Switch 0 -- Router 0 (left MAC_R0_L, right MAC_R0_R) ... Router 1 ... Router 2 -- Switch 1 -- Laptop 1 (port J, IP_B, MAC_L1)
+                                </div>
+                                <div class="answer-box text-emerald-800 font-semibold space-y-2">
+                                    <div>
+                                        <strong>الحالة A (الرابط المباشر بين Router 0 وRouter 2 مقطوع - Link Broken):</strong> تسلك الحزمة المسار البديل عبر Router 1:
+                                        <ul class="list-disc pr-5 mt-1 font-normal text-slate-800 space-y-1">
+                                            <li><strong>طبقة النقل (Transport Layer):</strong> منفذ المصدر <span class="ltr-badge font-bold">i</span>، منفذ الوجهة <span class="ltr-badge font-bold">J</span>، والبيانات (ثابتان في كل قفزة).</li>
+                                            <li><strong>طبقة الشبكة (Network Layer):</strong> عنوان IP المصدر <span class="ltr-badge font-bold">IP_A</span> وعنوان IP الوجهة <span class="ltr-badge font-bold">IP_B</span> (ثابتان في كل قفزة).</li>
+                                            <li><strong>طبقة ربط البيانات (Data Link Layer):</strong> تتغير عناوين الإطار بكل قفزة (القفزة 1: <span class="ltr-badge">MAC_L0 → MAC_R0_L</span>، القفزة 2: <span class="ltr-badge">MAC_R0_R → MAC_R1_L</span>، القفزة 3: <span class="ltr-badge">MAC_R1_R → MAC_R2_L</span>، القفزة 4: <span class="ltr-badge">MAC_R2_R → MAC_L1</span>).</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <strong>الحالة B (الرابط المباشر بين Router 0 وRouter 2 غير مقطوع - Link Not Broken):</strong> تسلك الحزمة أقصر مسار مباشر عبر Router 0 → Router 2:
+                                        <ul class="list-disc pr-5 mt-1 font-normal text-slate-800 space-y-1">
+                                            <li><strong>طبقة النقل وطبقة الشبكة:</strong> تبقى المنافذ (<span class="ltr-badge">i → J</span>) وعناوين IP (<span class="ltr-badge">IP_A → IP_B</span>) كما هي.</li>
+                                            <li><strong>طبقة ربط البيانات:</strong> قفزة 1 (<span class="ltr-badge">MAC_L0 → MAC_R0_L</span>)، قفزة 2 (<span class="ltr-badge">MAC_R0_R → MAC_R2_L</span>)، قفزة 3 (<span class="ltr-badge">MAC_R2_R → MAC_L1</span>).</li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-xs text-emerald-700 font-normal" dir="ltr">
+                                        Case A (R0–R2 broken): Path goes via R0 → R1 → R2. Transport ports (i → J) and Network IPs (IP_A → IP_B) stay constant; Data-Link MAC pairs change per hop (L0→R0, R0→R1, R1→R2, R2→L1). Case B (R0–R2 intact): Direct hop R0 → R2 reduces router hops while keeping ports and IPs unchanged and updating MACs per hop.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-2">
+                                <div class="font-bold text-brand-900">مخطط القفزات 3: تتبع العناوين عبر ثلاث قفزات (H1 → R1 → R2 → H2)</div>
+                                <div class="text-xs text-slate-500" dir="ltr">Diagram 3: Tracking addresses across three hops (H1 → R1 → R2 → H2)</div>
+                                <div class="p-2.5 rounded-lg bg-slate-100 text-xs font-mono text-slate-800" dir="ltr">
+                                    [H1: IP 172.16.1.2, MAC M1] --&gt; [R1: M2 | M3] --&gt; [R2: M4 | M5] --&gt; [H2: IP 192.168.50.9, MAC M6]
+                                </div>
+                                <div class="answer-box text-emerald-800 font-semibold space-y-1">
+                                    <div>• <strong>القاعدة الثابتة في كل قفزة:</strong> <span class="ltr-badge">Src IP = 172.16.1.2</span> و<span class="ltr-badge">Dst IP = 192.168.50.9</span> ثابتان من البداية للنهاية.</div>
+                                    <div>• <strong>تغير MAC بكل قفزة:</strong> قفزة 1 (<span class="ltr-badge">M1 → M2</span>)، قفزة 2 (<span class="ltr-badge">M3 → M4</span>)، قفزة 3 (<span class="ltr-badge">M5 → M6</span>).</div>
+                                    <div class="text-xs text-emerald-700 font-normal" dir="ltr">
+                                        End-to-end IPs remain 172.16.1.2 → 192.168.50.9 across all hops, while MAC pairs update per hop: (M1→M2), (M3→M4), (M5→M6).
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-xl bg-white border border-slate-200 space-y-2">
+                                <div class="font-bold text-brand-900">مخطط القفزات 4: لماذا لا يصل الإطار مباشرة إلى MAC الوجهة النهائية عبر الراوتر؟</div>
+                                <div class="text-xs text-slate-500" dir="ltr">Diagram 4: Why doesn't a frame use the final destination MAC directly across a router?</div>
+                                <div class="answer-box text-emerald-800 font-semibold">
+                                    جواب: لأن عناوين MAC محلية ضمن نطاق الشبكة المحلية/الرابط المباشر (Hop-to-Hop)، وعند عبور الراوتر يُفك إطار الطبقة الثانية ويعاد تغليفه بإطار جديد يناسب الرابط التالي.
+                                    <span class="block text-xs text-emerald-700 font-normal mt-0.5" dir="ltr">Ans: Because MAC addresses have local link/LAN scope (hop-to-hop); each router decapsulates the Layer-2 frame and encapsulates a new frame for the next link.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Extra Questions: True/False, OSI Matching & Subnetting -->
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-brand-900">أسئلة امتحانية إضافية (صح/خطأ مع التصحيح، مطابقة OSI، وتقسيم الشبكات)</h3>
+                            <p class="text-xs text-slate-500 mt-0.5" dir="ltr">Additional Exam Questions: True/False with Correction, OSI Matching &amp; Subnetting</p>
+                        </div>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3.5 rounded-xl bg-white border border-slate-200 space-y-1.5">
+                                <div class="font-bold text-slate-900">صح أو خطأ مع تصحيح الخطأ:</div>
+                                <div class="text-xs text-slate-500" dir="ltr">True or False, and correct each false statement:</div>
+                                <ul class="list-disc pr-5 space-y-1.5 text-xs sm:text-sm">
+                                    <li>
+                                        <div>جهازَان متصلان بوسط نقل يمكنهما التواصل دائماً. <span class="text-xs text-slate-500" dir="ltr">(Two devices connected by a medium can always communicate.)</span></div>
+                                        <div class="answer-box text-emerald-800 font-semibold">خطأ: يجب توفر بروتوكولات متفقة وتوافق وإشارات مناسبة لحدوث التواصل. <span class="text-xs font-normal text-emerald-700" dir="ltr">(False: Agreed protocols, compatibility, and proper signaling are required.)</span></div>
+                                    </li>
+                                    <li>
+                                        <div>هيكل النجمة (Star) يعني أن الحواسيب يجب أن تُرتب فيزيائياً على شكل نجمة. <span class="text-xs text-slate-500" dir="ltr">(A star topology means computers must be physically arranged in a star.)</span></div>
+                                        <div class="answer-box text-emerald-800 font-semibold">خطأ: يشير إلى طريقة الاتصال المنطقية/الفيزيائية عبر نقطة مركزية وليس بالضرورة الشكل الهندسي الظاهري. <span class="text-xs font-normal text-emerald-700" dir="ltr">(False: It describes connection layout via a central hub/switch, not literal geometric shape.)</span></div>
+                                    </li>
+                                    <li>
+                                        <div>معدل البت (Bit rate) وعرض النطاق (Bandwidth) كمية واحدة متطابقة دائماً. <span class="text-xs text-slate-500" dir="ltr">(Bit rate and bandwidth are the same quantity.)</span></div>
+                                        <div class="answer-box text-emerald-800 font-semibold">خطأ: معدل البت يُقاس بـ bps وعرض النطاق الترددي يُقاس بالهرتز Hz (رغم ارتباطهما). <span class="text-xs font-normal text-emerald-700" dir="ltr">(False: Bit rate is in bps while analog bandwidth is in Hz.)</span></div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl bg-white border border-slate-200 space-y-1.5">
+                                <div class="font-bold text-slate-900">مسألة تقسيم شبكة (Classful Subnetting): موقع <span class="ltr-badge">172.59.0.0</span> يحتاج إلى 60 شبكة فرعية:</div>
+                                <div class="text-xs text-slate-500" dir="ltr">Subnetting Problem: Site 172.59.0.0 (Class B) needs 60 subnets:</div>
+                                <div class="answer-box text-emerald-800 font-semibold space-y-1 text-xs sm:text-sm">
+                                    <div>• العنوان <span class="ltr-badge">172.59.0.0</span> من فئة <strong>Class B</strong> (القناع الافتراضي <span class="ltr-badge">255.255.0.0</span>).</div>
+                                    <div>• عدد البتات المستعارة (Borrowed bits): <span class="ltr-badge">2⁶ = 64 ≥ 60</span> ← نستعير <strong>6 بتات</strong>.</div>
+                                    <div>• عدد الشبكات الفرعية الكلي: <strong>64</strong> شبكة؛ وعدد المضيفين الصالحين بكل شبكة: <span class="ltr-badge">2¹⁰ - 2 = 1022</span> مضيفاً.</div>
+                                    <div>• القناع المخصص (Custom Subnet Mask): 6 وحدات من اليسار في المقطع الثالث (<span class="ltr-badge">128+64+32+16+8+4 = 252</span>) ← <span class="ltr-badge font-bold">255.255.252.0</span> (حجم الخطوة = 4).</div>
+                                    <div>• أول 4 شبكات فرعية: <span class="ltr-badge">172.59.0.0</span>، <span class="ltr-badge">172.59.4.0</span>، <span class="ltr-badge">172.59.8.0</span>، <span class="ltr-badge">172.59.12.0</span>.</div>
+                                    <div class="text-xs text-emerald-700 font-normal" dir="ltr">
+                                        Class B default mask 255.255.0.0; borrow 6 bits (2⁶ = 64 ≥ 60 subnets); usable hosts = 2¹⁰ - 2 = 1022; custom mask = 255.255.252.0; first 4 subnets: 172.59.0.0, 172.59.4.0, 172.59.8.0, 172.59.12.0.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 50 MCQs -->
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-brand-900">ثالثاً: 50 سؤال اختيار من متعدد تفاعلي (Interactive 50 MCQs)</h3>
+                                <p class="text-xs text-slate-500 mt-0.5" dir="ltr">Click an option to test yourself and get instant feedback</p>
+                            </div>
+                            <div id="mcqScoreBadge" class="px-3 py-1.5 rounded-xl bg-brand-50 text-brand-900 border border-brand-200 text-xs sm:text-sm font-bold">
+                                نتيجة MCQ: 0 / 50
+                            </div>
+                        </div>
+                        <div id="mcqContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
+                    </div>
+
+                    <!-- 50 Fill in the Blanks -->
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-brand-900">رابعاً: 50 سؤال فراغات تفاعلي (Interactive 50 Fill-in-the-Blanks)</h3>
+                                <p class="text-xs text-slate-500 mt-0.5" dir="ltr">Type your answer in the input box and click Check, or reveal the answer</p>
+                            </div>
+                            <div id="blanksScoreBadge" class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 text-xs sm:text-sm font-bold">
+                                نتيجة الفراغات: 0 / 50
+                            </div>
+                        </div>
+                        <div id="blanksContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
+                    </div>
+
+                </div>
+            </details>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 text-center py-4 px-4 text-xs sm:text-sm mt-10 space-y-1">
+        <div>ملخص دراسي وبنك أسئلة شامل لمادة شبكات الحاسوب واتصالات البيانات — عربي وإنكليزي.</div>
+        <div>
+            تصميم الطالب: <a href="https://instagram.com/b9.is" target="_blank" rel="noopener noreferrer" class="font-bold text-amber-300 hover:text-amber-200 underline underline-offset-4 transition">بكر جاسم حسن</a>
+        </div>
+    </footer>
+
+    <script>
+// ... existing code ... -->
